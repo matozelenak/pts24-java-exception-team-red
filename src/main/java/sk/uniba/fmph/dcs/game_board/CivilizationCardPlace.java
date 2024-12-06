@@ -132,7 +132,7 @@ public class CivilizationCardPlace implements InterfaceFigureLocationInternal {
                     }
                     break;
                 case AllPlayersTakeReward:
-                    eval = new AllPlayersTakeReward(player.getPlayerOrder().getPlayers(), rewardMenu, throwDices);
+                    eval = new AllPlayersTakeReward(player.getPlayerOrder().getPlayers(), rewardMenu, throwDices); // RewardMenu initialize()
 //                    eval.performEffect(player, null);
                     returnValue = ActionResult.ACTION_DONE_ALL_PLAYERS_TAKE_A_REWARD;
                     break;

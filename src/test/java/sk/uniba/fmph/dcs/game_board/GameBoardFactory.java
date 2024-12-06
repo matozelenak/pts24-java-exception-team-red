@@ -7,6 +7,7 @@ import sk.uniba.fmph.dcs.stone_age.EndOfGameEffect;
 import sk.uniba.fmph.dcs.stone_age.ImmediateEffect;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -66,8 +67,8 @@ public class GameBoardFactory {
 
     public static List<BuildingTile> createBuildingTiles1(int players) { // TODO when BuildingTile fix merged
         List<BuildingTile> buildingTiles = new ArrayList<>();
-//        for (int i = 0; i < players; i++)
-//            buildingTiles.add(new BuildingTile(new ArrayList<>(), )); // TODO cakat kym sa opravi BuildingTile
+        for (int i = 0; i < players; i++)
+            buildingTiles.add(new BuildingTile(new ArrayList<>(), new SimpleBuilding(new ArrayList<>(Arrays.asList(Effect.WOOD))))); // TODO cakat kym sa opravi BuildingTile
         return buildingTiles;
     }
 
