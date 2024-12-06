@@ -1,13 +1,12 @@
 package sk.uniba.fmph.dcs.game_board;
 
+import com.sun.jdi.connect.IllegalConnectorArgumentsException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Before;
 import org.junit.Test;
 import sk.uniba.fmph.dcs.stone_age.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.OptionalInt;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -18,8 +17,11 @@ public class GameBoardIntegrationTest {
     List<Player> players;
     GameBoard gameBoard;
     GameBoardFactory.ThrowMock throwMock;
+    InterfaceToolUse currentThrow;
     InterfaceFigureLocation civilizationCard1, civilizationCard2, civilizationCard3, civilizationCard4;
     InterfaceFigureLocation buildingTile1, buildingTile2, buildingTile3, buildingTile4;
+    InterfaceFigureLocation resourceForest, resourceClay, resourceQuarry, resourceRiver, resourceHunting;
+    InterfaceFigureLocation toolMaker, hut, fields;
 
     @Before
     public void setup() {
@@ -45,6 +47,8 @@ public class GameBoardIntegrationTest {
         throwMock = new GameBoardFactory.ThrowMock();
         gameBoard = GameBoardFactory.createGameBoard(players, throwMock, GameBoardFactory.createCardDeck1(), GameBoardFactory.createBuildingTiles1_4Players());
 
+        currentThrow = gameBoard.getCurrentThrow();
+
         civilizationCard1 = gameBoard.getLocation(Location.CIVILISATION_CARD1);
         civilizationCard2 = gameBoard.getLocation(Location.CIVILISATION_CARD2);
         civilizationCard3 = gameBoard.getLocation(Location.CIVILISATION_CARD3);
@@ -54,10 +58,20 @@ public class GameBoardIntegrationTest {
         buildingTile2 = gameBoard.getLocation(Location.BUILDING_TILE2);
         buildingTile3 = gameBoard.getLocation(Location.BUILDING_TILE3);
         buildingTile4 = gameBoard.getLocation(Location.BUILDING_TILE4);
+
+        resourceForest = gameBoard.getLocation(Location.FOREST);
+        resourceClay = gameBoard.getLocation(Location.CLAY_MOUND);
+        resourceQuarry = gameBoard.getLocation(Location.QUARY);
+        resourceRiver = gameBoard.getLocation(Location.RIVER);
+        resourceHunting = gameBoard.getLocation(Location.HUNTING_GROUNDS);
+
+        toolMaker = gameBoard.getLocation(Location.TOOL_MAKER);
+        hut = gameBoard.getLocation(Location.HUT);
+        fields = gameBoard.getLocation(Location.FIELD);
     }
 
     @Test
-    public void test1() {
+    public void testCivilizationCardPlaces() {
         assertTrue(civilizationCard1.placeFigures(player1, 1));
         assertTrue(civilizationCard2.placeFigures(player2, 1));
         assertTrue(civilizationCard3.placeFigures(player3, 1));
@@ -157,7 +171,7 @@ public class GameBoardIntegrationTest {
 
 
     @Test
-    public void test2() {
+    public void testBuildingTiles() {
         assertTrue(buildingTile1.placeFigures(player1, 1));
         assertFalse(buildingTile1.placeFigures(player1, 1));
         assertFalse(buildingTile1.placeFigures(player2, 1));
@@ -167,11 +181,96 @@ public class GameBoardIntegrationTest {
 
         Effect[] inputResources;
         Effect[] outputResources;
+        List<Effect> expectedEffects = new ArrayList<>();
 
         // player1 SimpleBuilding 1 WOOD 1 CLAY
         inputResources = new Effect[] {Effect.CLAY, Effect.WOOD};
         outputResources = new Effect[] {};
+        expectedEffects.clear();
+        expectedEffects.add(Effect.BUILDING);
+        for (int i = 0; i < 7; i++)
+            expectedEffects.add(Effect.POINT);
         assertEquals(ActionResult.ACTION_DONE, buildingTile1.makeAction(player1, inputResources, outputResources));
+        assertTrue(CollectionUtils.isEqualCollection(expectedEffects, playerBoardMock1.givenEffects));
+
+        // player2 VariableBuilding
+        inputResources = new Effect[] {Effect.STONE, Effect.CLAY, Effect.CLAY, Effect.STONE};
+        outputResources = new Effect[] {};
+        expectedEffects.clear();
+        expectedEffects.add(Effect.BUILDING);
+        for (int i = 0; i < 18; i++)
+            expectedEffects.add(Effect.POINT);
+        assertEquals(ActionResult.ACTION_DONE, buildingTile2.makeAction(player2, inputResources, outputResources));
+        assertTrue(CollectionUtils.isEqualCollection(expectedEffects, playerBoardMock2.givenEffects));
+
+        // player3 SimpleBuilding
+        inputResources = new Effect[] {Effect.STONE, Effect.CLAY};
+        outputResources = new Effect[] {};
+        expectedEffects.clear();
+        expectedEffects.add(Effect.BUILDING);
+        for (int i = 0; i < 9; i++)
+            expectedEffects.add(Effect.POINT);
+        assertEquals(ActionResult.ACTION_DONE, buildingTile3.makeAction(player3, inputResources, outputResources));
+        assertTrue(CollectionUtils.isEqualCollection(expectedEffects, playerBoardMock3.givenEffects));
+
+        // player4 ArbitraryBuilding
+        inputResources = new Effect[] {Effect.GOLD, Effect.STONE, Effect.CLAY, Effect.WOOD};
+        outputResources = new Effect[] {};
+        expectedEffects.clear();
+        expectedEffects.add(Effect.BUILDING);
+        for (int i = 0; i < 18; i++)
+            expectedEffects.add(Effect.POINT);
+        assertEquals(ActionResult.ACTION_DONE, buildingTile4.makeAction(player4, inputResources, outputResources));
+        assertTrue(CollectionUtils.isEqualCollection(expectedEffects, playerBoardMock4.givenEffects));
+
+    }
+
+    @Test
+    public void testOtherLocations() {
+        assertTrue(resourceForest.placeFigures(player1, 5));
+        assertTrue(fields.placeFigures(player2, 1));
+        assertTrue(toolMaker.placeFigures(player3, 1));
+        assertTrue(hut.placeFigures(player4, 2));
+
+        Effect[] inputResources;
+        Effect[] outputResources;
+        List<Effect> expectedEffects = new ArrayList<>();
+
+        // player1 Forest
+        inputResources = new Effect[] {};
+        outputResources = new Effect[] {};
+        expectedEffects.clear();
+        for (int i = 0; i < 6; i++)
+            expectedEffects.add(Effect.WOOD);
+        throwMock.result = new int[] {1, 4, 3, 6, 2};
+        assertEquals(ActionResult.ACTION_DONE_WAIT_FOR_TOOL_USE, resourceForest.makeAction(player1, inputResources, outputResources));
+        assertTrue(currentThrow.useTool(2));
+        assertTrue(currentThrow.finishUsingTools());
+        assertTrue(CollectionUtils.isEqualCollection(expectedEffects, playerBoardMock1.givenEffects));
+
+        // player2 Fields
+        inputResources = new Effect[] {};
+        outputResources = new Effect[] {};
+        expectedEffects.clear();
+        expectedEffects.add(Effect.FIELD);
+        assertEquals(ActionResult.ACTION_DONE, fields.makeAction(player2, inputResources, outputResources));
+        assertTrue(CollectionUtils.isEqualCollection(expectedEffects, playerBoardMock2.givenEffects));
+
+        // player3 ToolMaker
+        inputResources = new Effect[] {};
+        outputResources = new Effect[] {};
+        expectedEffects.clear();
+        expectedEffects.add(Effect.TOOL);
+        assertEquals(ActionResult.ACTION_DONE, toolMaker.makeAction(player3, inputResources, outputResources));
+        assertTrue(CollectionUtils.isEqualCollection(expectedEffects, playerBoardMock3.givenEffects));
+
+        // player4 Hut
+        inputResources = new Effect[] {};
+        outputResources = new Effect[] {};
+        expectedEffects.clear();
+        assertEquals(ActionResult.ACTION_DONE, hut.makeAction(player4, inputResources, outputResources));
+        assertTrue(CollectionUtils.isEqualCollection(expectedEffects, playerBoardMock4.givenEffects));
+        assertTrue(playerBoardMock4.addNewFigureCalled);
     }
 
     private static class PlayerBoardMock implements InterfacePlayerBoardGameBoard {
@@ -182,6 +281,7 @@ public class GameBoardIntegrationTest {
         public boolean expectedHasResources = true;
         public Effect[] takenResources;
         public boolean expectedHasTools = true;
+        public boolean addNewFigureCalled = false;
         public int usedToolID;
 
         @Override
@@ -226,6 +326,7 @@ public class GameBoardIntegrationTest {
 
         @Override
         public boolean addNewFigure() {
+            addNewFigureCalled = true;
             return false;
         }
     }
