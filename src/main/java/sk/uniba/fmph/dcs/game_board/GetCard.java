@@ -19,13 +19,16 @@ public class GetCard implements EvaluateCivilisationCardImmediateEffect {
     public boolean performEffect(Player player, Effect choice) {
 //        currentThrow.initiate(player, null, 0);
 
-        Optional<CivilisationCard> deckTopCard = cardDeck.getTop();
-        if(deckTopCard.isEmpty()) {
+        Optional<CivilisationCard> deckTop = cardDeck.getTop();
+        CivilisationCard deckTopCard;
+        if(deckTop.isEmpty()) {
             return false;
+        } else {
+            deckTopCard = deckTop.get();
         }
 
         InterfacePlayerBoardGameBoard playerBoard = player.getPlayerBoard();
-        playerBoard.giveEndOfGameEffect(deckTopCard.get().getEndOfGameEffect());
+        playerBoard.giveEndOfGameEffect(deckTopCard.getEndOfGameEffect());
         return true;
     }
 }

@@ -86,7 +86,9 @@ public class BuildingTile implements InterfaceFigureLocationInternal {
             throw new IllegalArgumentException("Failed to calculate building score.");
         } else {
             player.getPlayerBoard().giveEffect(new Effect[]{Effect.BUILDING});
-            player.getPlayerBoard().giveEffect(inputResources.toArray(new Effect[]{}));
+            for(int i = 0; i < buildingPoints.getAsInt(); ++i) {
+                player.getPlayerBoard().giveEffect(new Effect[]{Effect.POINT});
+            }
         }
 
         // po skonceni akcie si hrac zoberie naspat figurku
