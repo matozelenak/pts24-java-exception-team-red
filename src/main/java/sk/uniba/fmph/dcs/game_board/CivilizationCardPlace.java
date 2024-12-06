@@ -98,8 +98,8 @@ public class CivilizationCardPlace implements InterfaceFigureLocationInternal {
                     eval.performEffect(player, Effect.FOOD);
                     break;
                 case Point:
-                    eval = new GetSomethingFixed(Arrays.asList(Effect.BUILDING));
-                    eval.performEffect(player, Effect.BUILDING); // TODO not Building
+                    eval = new GetSomethingFixed(Arrays.asList(Effect.POINT));
+                    eval.performEffect(player, Effect.POINT);
                     break;
                 case ThrowWood:
                     eval = new GetSomethingThrow(Effect.WOOD, currentThrow);

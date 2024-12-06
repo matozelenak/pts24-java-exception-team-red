@@ -78,7 +78,7 @@ public class ResourceSource implements InterfaceFigureLocationInternal {
         player.getPlayerBoard().takeFigures(-figures.get(player.getPlayerOrder()));
         figures.remove(player.getPlayerOrder());
 
-        return ActionResult.ACTION_DONE;
+        return ActionResult.ACTION_DONE_WAIT_FOR_TOOL_USE;
     }
 
     @Override
