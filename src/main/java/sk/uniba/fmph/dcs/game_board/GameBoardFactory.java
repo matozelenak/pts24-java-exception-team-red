@@ -13,7 +13,7 @@ import java.util.Stack;
 
 public class GameBoardFactory {
 
-    public static GameBoard createGameBoard(List<Player> players, InterfaceThrow throwDices, CivilizationCardDeck cardDeck, List<BuildingTile> buildingTiles) {
+    public static GameBoard createGameBoard(List<Player> players, InterfaceThrow throwDices, CivilizationCardDeck cardDeck, List<BuildingTile> tiles) {
         ToolMakerHutFields toolMakerHutFields = new ToolMakerHutFields();
 
         CurrentThrow currentThrow = new CurrentThrow(throwDices);
@@ -33,6 +33,7 @@ public class GameBoardFactory {
         ResourceSource clay = new ResourceSource(currentThrow, "Clay mould", Effect.WOOD, 7, maxFigureColorsResourceSource);
         ResourceSource quarry = new ResourceSource(currentThrow, "Quarry", Effect.WOOD, 7, maxFigureColorsResourceSource);
         ResourceSource river = new ResourceSource(currentThrow, "River", Effect.WOOD, 7, maxFigureColorsResourceSource);
+        ResourceSource huntingGrounds = new ResourceSource(currentThrow, "Hunting Grounds", Effect.FOOD, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
         RewardMenu rewardMenu = new RewardMenu(players);
         CivilizationCardPlace civilizationCardPlace1 = new CivilizationCardPlace(1, cardDeck, currentThrow, rewardMenu, throwDices);
@@ -44,11 +45,14 @@ public class GameBoardFactory {
         civilizationCardPlace3.setup(civilizationCardPlace2, civilizationCardPlace4);
         civilizationCardPlace4.setup(civilizationCardPlace3, null);
 
+        BuildingTile buildingTile1 = tiles.size() > 0 ? tiles.get(0) : null;
+        BuildingTile buildingTile2 = tiles.size() > 1 ? tiles.get(1) : null;
+        BuildingTile buildingTile3 = tiles.size() > 2 ? tiles.get(2) : null;
+        BuildingTile buildingTile4 = tiles.size() > 3 ? tiles.get(3) : null;
 
-
-        return new GameBoard(players, toolMakerHutFields, forest, clay, quarry, river, currentThrow,
+        return new GameBoard(players, toolMakerHutFields, forest, clay, quarry, river, huntingGrounds, currentThrow,
                 civilizationCardPlace1, civilizationCardPlace2, civilizationCardPlace3, civilizationCardPlace4,
-                cardDeck, rewardMenu, buildingTiles);
+                cardDeck, rewardMenu, buildingTile1, buildingTile2, buildingTile3, buildingTile4);
     }
 
     public static CivilizationCardDeck createCardDeck1() {
@@ -65,10 +69,14 @@ public class GameBoardFactory {
         return new CivilizationCardDeck(stack);
     }
 
-    public static List<BuildingTile> createBuildingTiles1(int players) { // TODO when BuildingTile fix merged
+    public static List<BuildingTile> createBuildingTiles1_4Players() { // TODO when BuildingTile fix merged
         List<BuildingTile> buildingTiles = new ArrayList<>();
-        for (int i = 0; i < players; i++)
-            buildingTiles.add(new BuildingTile(new ArrayList<>(), new SimpleBuilding(new ArrayList<>(Arrays.asList(Effect.WOOD))))); // TODO cakat kym sa opravi BuildingTile
+        // TODO cakat kym sa opravi BuildingTile
+        buildingTiles.add(new BuildingTile(new ArrayList<>(), new SimpleBuilding(new ArrayList<>(Arrays.asList(Effect.WOOD, Effect.CLAY)))));
+        buildingTiles.add(new BuildingTile(new ArrayList<>(), new VariableBuilding(4, 2)));
+        buildingTiles.add(new BuildingTile(new ArrayList<>(), new SimpleBuilding(new ArrayList<>(Arrays.asList(Effect.STONE, Effect.CLAY)))));
+        buildingTiles.add(new BuildingTile(new ArrayList<>(), new ArbitraryBuilding(7)));
+
         return buildingTiles;
     }
 
