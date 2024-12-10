@@ -35,14 +35,15 @@ public class CurrentThrowTest {
         assertTrue(currentThrow.canUseTools());
 
         playerBoardMock1.expectedHasSufficientTools = false;
-        assertFalse(currentThrow.useTool(2));
+        playerBoardMock1.expectedUseTool = -1;
+        assertFalse(currentThrow.useTool(0));
         assertNull(playerBoardMock1.givenEffects);
 
         Effect[] expectedList = new Effect[11];
         for (int i = 0; i < 11; i++) expectedList[i] = Effect.FOOD;
         playerBoardMock1.expectedHasSufficientTools = true;
-        assertTrue(currentThrow.useTool(2));
-        assertEquals(playerBoardMock1.usedToolID, 2);
+        playerBoardMock1.expectedUseTool = 2;
+        assertTrue(currentThrow.useTool(0));
         assertEquals(currentThrow.getThrowResult(), 11);
         assertTrue(currentThrow.finishUsingTools());
         assertArrayEquals(playerBoardMock1.givenEffects, expectedList);
@@ -57,11 +58,12 @@ public class CurrentThrowTest {
         assertTrue(currentThrow.canUseTools());
 
         playerBoardMock1.expectedHasSufficientTools = false;
-        assertFalse(currentThrow.useTool(4));
+        playerBoardMock1.expectedUseTool = -1;
+        assertFalse(currentThrow.useTool(0));
 
         playerBoardMock1.expectedHasSufficientTools = true;
-        assertTrue(currentThrow.useTool(4));
-        assertEquals(playerBoardMock1.usedToolID, 4);
+        playerBoardMock1.expectedUseTool = 4;
+        assertTrue(currentThrow.useTool(0));
         assertEquals(currentThrow.getThrowResult(), 4);
         assertTrue(currentThrow.finishUsingTools());
         Effect[] expectedList = new Effect[4];
@@ -78,11 +80,12 @@ public class CurrentThrowTest {
         assertTrue(currentThrow.canUseTools());
 
         playerBoardMock1.expectedHasSufficientTools = false;
-        assertFalse(currentThrow.useTool(6));
+        playerBoardMock1.expectedUseTool = -1;
+        assertFalse(currentThrow.useTool(0));
 
         playerBoardMock1.expectedHasSufficientTools = true;
-        assertTrue(currentThrow.useTool(6));
-        assertEquals(playerBoardMock1.usedToolID, 6);
+        playerBoardMock1.expectedUseTool = 6;
+        assertTrue(currentThrow.useTool(0));
         assertEquals(currentThrow.getThrowResult(), 2);
         assertTrue(currentThrow.finishUsingTools());
         Effect[] expectedList = new Effect[2];
@@ -99,11 +102,12 @@ public class CurrentThrowTest {
         assertTrue(currentThrow.canUseTools());
 
         playerBoardMock1.expectedHasSufficientTools = false;
-        assertFalse(currentThrow.useTool(3));
+        playerBoardMock1.expectedUseTool = -1;
+        assertFalse(currentThrow.useTool(0));
 
         playerBoardMock1.expectedHasSufficientTools = true;
-        assertTrue(currentThrow.useTool(3));
-        assertEquals(playerBoardMock1.usedToolID, 3);
+        playerBoardMock1.expectedUseTool = 3;
+        assertTrue(currentThrow.useTool(0));
         assertEquals(currentThrow.getThrowResult(), 3);
         assertTrue(currentThrow.finishUsingTools());
         Effect[] expectedList = new Effect[3];
@@ -120,41 +124,23 @@ public class CurrentThrowTest {
         assertTrue(currentThrow.canUseTools());
 
         playerBoardMock1.expectedHasSufficientTools = false;
-        assertFalse(currentThrow.useTool(10));
+        playerBoardMock1.expectedUseTool = -1;
+        assertFalse(currentThrow.useTool(0));
 
         playerBoardMock1.expectedHasSufficientTools = true;
-        assertTrue(currentThrow.useTool(10));
-        assertEquals(playerBoardMock1.usedToolID, 10);
+        playerBoardMock1.expectedUseTool = 10;
+        assertTrue(currentThrow.useTool(0));
         assertEquals(currentThrow.getThrowResult(), 4);
 
         playerBoardMock1.expectedHasSufficientTools = true;
-        assertTrue(currentThrow.useTool(7));
-        assertEquals(playerBoardMock1.usedToolID, 7);
+        playerBoardMock1.expectedUseTool = 7;
+        assertTrue(currentThrow.useTool(0));
         assertEquals(currentThrow.getThrowResult(), 6);
         assertTrue(currentThrow.finishUsingTools());
         Effect[] expectedList = new Effect[6];
         for (int i = 0; i < 6; i++) expectedList[i] = Effect.GOLD;
         assertArrayEquals(playerBoardMock1.givenEffects, expectedList);
     }
-
-    // irrelevant
-    /*@Test
-    public void testThrowCivilizationCardDiceRoll() {
-        // test rolling dice on the civilization card "Dice roll"
-        throwMock.expectedResult = new int[] {6, 4, 4, 2};
-        currentThrow.initiate(player1, Effect.BUILDING, 4); // don't know what effect to put here since the enum doesn't have civilization card or something
-        assertEquals(currentThrow.getThrowResult(), 16);
-
-        assertFalse(currentThrow.canUseTools());
-
-        playerBoardMock1.expectedHasSufficientTools = false;
-        assertFalse(currentThrow.useTool(1));
-
-        playerBoardMock1.expectedHasSufficientTools = true;
-        assertFalse(currentThrow.useTool(1));
-        assertEquals(playerBoardMock1.usedToolID, 0);
-        assertEquals(currentThrow.getThrowResult(), 16);
-    }*/
 
 
 
@@ -168,7 +154,7 @@ public class CurrentThrowTest {
 
     private static class PlayerBoardMock implements InterfacePlayerBoardGameBoard {
         public boolean expectedHasSufficientTools;
-        public int usedToolID;
+        public int expectedUseTool;
         public Effect[] givenEffects;
 
         @Override
@@ -203,8 +189,8 @@ public class CurrentThrowTest {
 
         @Override
         public OptionalInt useTool(int idx) {
-            this.usedToolID = idx;
-            return null;
+            if (expectedUseTool == -1) return OptionalInt.empty();
+            return OptionalInt.of(expectedUseTool);
         }
 
         @Override
