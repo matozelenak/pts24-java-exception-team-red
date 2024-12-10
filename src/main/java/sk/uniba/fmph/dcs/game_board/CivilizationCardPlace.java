@@ -221,4 +221,8 @@ public class CivilizationCardPlace implements InterfaceFigureLocationInternal {
         this.nextCivilizationCard = next;
         this.prevCivilizationCard = prev;
     }
+
+    public int getRequiredResources() {
+        return requiredResources;
+    }
 }
