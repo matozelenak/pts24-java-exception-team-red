@@ -80,25 +80,25 @@ public class GameBoard implements InterfaceGetState {
 
     @Override
     public String state() {
-        Map<String, String> state = new HashMap<>();
-        state.put("CurrentThrow", currentThrow.state());
-        state.put("CivilizationCardDeck", civilizationCardDeck.state());
-        state.put("CivilizationCardPlace1", civilizationCardPlace1.state());
-        state.put("CivilizationCardPlace2", civilizationCardPlace2.state());
-        state.put("CivilizationCardPlace3", civilizationCardPlace3.state());
-        state.put("CivilizationCardPlace4", civilizationCardPlace4.state());
-        state.put("RewardMenu", rewardMenu.state());
-        state.put("BuildingTile1", buildingTile1.state());
-        state.put("BuildingTile2", buildingTile2.state());
-        state.put("BuildingTile3", buildingTile3.state());
-        state.put("BuildingTile4", buildingTile4.state());
-        state.put("ToolMakerHutFields", toolMakerHutFields.state());
-        state.put("ResourceSourceForest", resourceSourceForest.state());
-        state.put("ResourceSourceClay", resourceSourceClay.state());
-        state.put("ResourceSourceQuarry", resourceSourceQuarry.state());
-        state.put("ResourceSourceRiver", resourceSourceRiver.state());
-        state.put("ResourceSourceHuntingGrounds", resourceSourceHuntingGrounds.state());
-        return new JSONObject(state).toString();
+        JSONObject obj = new JSONObject();
+        obj.put("CurrentThrow", new JSONObject(currentThrow.state()));
+        obj.put("CivilizationCardDeck", new JSONObject(civilizationCardDeck.state()));
+        obj.put("CivilizationCardPlace1", new JSONObject(civilizationCardPlace1.state()));
+        obj.put("CivilizationCardPlace2", new JSONObject(civilizationCardPlace2.state()));
+        obj.put("CivilizationCardPlace3", new JSONObject(civilizationCardPlace3.state()));
+        obj.put("CivilizationCardPlace4", new JSONObject(civilizationCardPlace4.state()));
+        obj.put("RewardMenu", new JSONObject(rewardMenu.state()));
+        obj.put("BuildingTile1", new JSONObject(buildingTile1.state()));
+        obj.put("BuildingTile2", new JSONObject(buildingTile2.state()));
+        obj.put("BuildingTile3", new JSONObject(buildingTile3.state()));
+        obj.put("BuildingTile4", new JSONObject(buildingTile4.state()));
+        obj.put("ToolMakerHutFields", new JSONObject(toolMakerHutFields.state()));
+        obj.put("ResourceSourceForest", new JSONObject(resourceSourceForest.state()));
+        obj.put("ResourceSourceClay", new JSONObject(resourceSourceClay.state()));
+        obj.put("ResourceSourceQuarry", new JSONObject(resourceSourceQuarry.state()));
+        obj.put("ResourceSourceRiver", new JSONObject(resourceSourceRiver.state()));
+        obj.put("ResourceSourceHuntingGrounds", new JSONObject(resourceSourceHuntingGrounds.state()));
+        return obj.toString();
     }
 
     public InterfaceFigureLocation getLocation(Location loc) {

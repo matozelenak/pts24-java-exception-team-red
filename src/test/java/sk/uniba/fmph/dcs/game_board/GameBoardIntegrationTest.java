@@ -2,6 +2,7 @@ package sk.uniba.fmph.dcs.game_board;
 
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import sk.uniba.fmph.dcs.stone_age.*;
@@ -92,7 +93,8 @@ public class GameBoardIntegrationTest {
         inputResources = new Effect[] {Effect.WOOD, Effect.CLAY};
         outputResources = new Effect[] {};
         assertEquals(ActionResult.ACTION_DONE_WAIT_FOR_TOOL_USE, civilizationCard2.makeAction(player2, inputResources, outputResources));
-        assertTrue(gameBoard.getCurrentThrow().useTool(6));
+        playerBoardMock2.expectedUseTool = 6;
+        assertTrue(gameBoard.getCurrentThrow().useTool(0));
         assertTrue(gameBoard.getCurrentThrow().finishUsingTools());
         assertEquals(new ArrayList<>(Arrays.asList(Effect.STONE, Effect.STONE, Effect.STONE)), playerBoardMock2.givenEffects);
         assertEquals(new ArrayList<>(Arrays.asList(EndOfGameEffect.ToolMaker)), playerBoardMock2.givenEndOfGameEffects);
@@ -111,24 +113,24 @@ public class GameBoardIntegrationTest {
         assertEquals(new ArrayList<>(Arrays.asList(EndOfGameEffect.Art)), playerBoardMock4.givenEndOfGameEffects);
 
 
-        System.out.println(gameBoard.state());
+        System.out.println(new JSONObject(gameBoard.state()).toString(1));
 
         // ROUND 2
         playerBoardMock1.givenEffects.clear();
         playerBoardMock1.givenEndOfGameEffects.clear();
-        playerBoardMock1.usedToolID = 0;
+        playerBoardMock1.expectedUseTool = 0;
         playerBoardMock1.takeFiguresAmount = 0;
         playerBoardMock2.givenEffects.clear();
         playerBoardMock2.givenEndOfGameEffects.clear();
-        playerBoardMock2.usedToolID = 0;
+        playerBoardMock2.expectedUseTool = 0;
         playerBoardMock2.takeFiguresAmount = 0;
         playerBoardMock3.givenEffects.clear();
         playerBoardMock3.givenEndOfGameEffects.clear();
-        playerBoardMock3.usedToolID = 0;
+        playerBoardMock3.expectedUseTool = 0;
         playerBoardMock3.takeFiguresAmount = 0;
         playerBoardMock4.givenEffects.clear();
         playerBoardMock4.givenEndOfGameEffects.clear();
-        playerBoardMock4.usedToolID = 0;
+        playerBoardMock4.expectedUseTool = 0;
         playerBoardMock4.takeFiguresAmount = 0;
 
         assertFalse(civilizationCard1.newTurn());
@@ -244,7 +246,8 @@ public class GameBoardIntegrationTest {
             expectedEffects.add(Effect.WOOD);
         throwMock.result = new int[] {1, 4, 3, 6, 2};
         assertEquals(ActionResult.ACTION_DONE_WAIT_FOR_TOOL_USE, resourceForest.makeAction(player1, inputResources, outputResources));
-        assertTrue(currentThrow.useTool(2));
+        playerBoardMock1.expectedUseTool = 2;
+        assertTrue(currentThrow.useTool(0));
         assertTrue(currentThrow.finishUsingTools());
         assertTrue(CollectionUtils.isEqualCollection(expectedEffects, playerBoardMock1.givenEffects));
 
@@ -282,7 +285,7 @@ public class GameBoardIntegrationTest {
         public Effect[] takenResources;
         public boolean expectedHasTools = true;
         public boolean addNewFigureCalled = false;
-        public int usedToolID;
+        public int expectedUseTool;
 
         @Override
         public void giveEffect(Effect[] stuff) {
@@ -320,8 +323,7 @@ public class GameBoardIntegrationTest {
 
         @Override
         public OptionalInt useTool(int idx) {
-            usedToolID = idx;
-            return null;
+            return OptionalInt.of(expectedUseTool);
         }
 
         @Override

@@ -30,9 +30,9 @@ public class GameBoardFactory {
                 break;
         }
         ResourceSource forest = new ResourceSource(currentThrow, "Forest", Effect.WOOD, 7, maxFigureColorsResourceSource);
-        ResourceSource clay = new ResourceSource(currentThrow, "Clay mould", Effect.WOOD, 7, maxFigureColorsResourceSource);
-        ResourceSource quarry = new ResourceSource(currentThrow, "Quarry", Effect.WOOD, 7, maxFigureColorsResourceSource);
-        ResourceSource river = new ResourceSource(currentThrow, "River", Effect.WOOD, 7, maxFigureColorsResourceSource);
+        ResourceSource clay = new ResourceSource(currentThrow, "Clay mould", Effect.CLAY, 7, maxFigureColorsResourceSource);
+        ResourceSource quarry = new ResourceSource(currentThrow, "Quarry", Effect.STONE, 7, maxFigureColorsResourceSource);
+        ResourceSource river = new ResourceSource(currentThrow, "River", Effect.GOLD, 7, maxFigureColorsResourceSource);
         ResourceSource huntingGrounds = new ResourceSource(currentThrow, "Hunting Grounds", Effect.FOOD, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
         RewardMenu rewardMenu = new RewardMenu(players);
@@ -55,6 +55,7 @@ public class GameBoardFactory {
                 cardDeck, rewardMenu, buildingTile1, buildingTile2, buildingTile3, buildingTile4);
     }
 
+    // used in GameBoardIntegrationTest
     public static CivilizationCardDeck createCardDeck1() {
         Stack<CivilisationCard> stack = new Stack<>();
         stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.Gold}, new EndOfGameEffect[]{EndOfGameEffect.Music}));
@@ -69,6 +70,31 @@ public class GameBoardFactory {
         return new CivilizationCardDeck(stack);
     }
 
+    // used in StoneAgeIntegrationTest
+    public static CivilizationCardDeck createCardDeck2() {
+        Stack<CivilisationCard> stack = new Stack<>();
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.Gold}, new EndOfGameEffect[]{EndOfGameEffect.Medicine}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.Food}, new EndOfGameEffect[]{EndOfGameEffect.Writing}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.Wood}, new EndOfGameEffect[]{EndOfGameEffect.Shaman, EndOfGameEffect.Shaman}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.ThrowStone}, new EndOfGameEffect[]{EndOfGameEffect.ToolMaker, EndOfGameEffect.ToolMaker}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.ThrowGold}, new EndOfGameEffect[]{EndOfGameEffect.Farmer, EndOfGameEffect.Farmer}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.Point}, new EndOfGameEffect[]{EndOfGameEffect.Builder}));
+        return new CivilizationCardDeck(stack);
+    }
+
+    // used in StoneAgeIntegrationTest
+    public static CivilizationCardDeck createCardDeck3() {
+        Stack<CivilisationCard> stack = new Stack<>();
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.Stone}, new EndOfGameEffect[]{EndOfGameEffect.Pottery}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.Gold}, new EndOfGameEffect[]{EndOfGameEffect.Medicine}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.Point}, new EndOfGameEffect[]{EndOfGameEffect.Writing}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.ThrowClay}, new EndOfGameEffect[]{EndOfGameEffect.Shaman, EndOfGameEffect.Shaman}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.Card}, new EndOfGameEffect[]{EndOfGameEffect.ToolMaker, EndOfGameEffect.ToolMaker}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.AllPlayersTakeReward}, new EndOfGameEffect[]{EndOfGameEffect.Farmer, EndOfGameEffect.Farmer}));
+        stack.push(new CivilisationCard(new ImmediateEffect[] {ImmediateEffect.ArbitraryResource}, new EndOfGameEffect[]{EndOfGameEffect.Builder}));
+        return new CivilizationCardDeck(stack);
+    }
+
     public static List<BuildingTile> createBuildingTiles1_4Players() { // TODO when BuildingTile fix merged
         List<BuildingTile> buildingTiles = new ArrayList<>();
         // TODO cakat kym sa opravi BuildingTile
@@ -76,6 +102,16 @@ public class GameBoardFactory {
         buildingTiles.add(new BuildingTile(new ArrayList<>(), new VariableBuilding(4, 2)));
         buildingTiles.add(new BuildingTile(new ArrayList<>(), new SimpleBuilding(new ArrayList<>(Arrays.asList(Effect.STONE, Effect.CLAY)))));
         buildingTiles.add(new BuildingTile(new ArrayList<>(), new ArbitraryBuilding(7)));
+
+        return buildingTiles;
+    }
+
+    public static List<BuildingTile> createBuildingTiles2_2Players() {
+        List<BuildingTile> buildingTiles = new ArrayList<>();
+        buildingTiles.add(new BuildingTile(new ArrayList<>(), new ArbitraryBuilding(7)));
+        buildingTiles.add(new BuildingTile(new ArrayList<>(), new VariableBuilding(4, 2)));
+        buildingTiles.add(new BuildingTile(new ArrayList<>(), new SimpleBuilding(new ArrayList<>(Arrays.asList(Effect.WOOD, Effect.CLAY)))));
+        buildingTiles.add(new BuildingTile(new ArrayList<>(), new SimpleBuilding(new ArrayList<>(Arrays.asList(Effect.CLAY)))));
 
         return buildingTiles;
     }
