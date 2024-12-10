@@ -95,9 +95,8 @@ public class GameBoardFactory {
         return new CivilizationCardDeck(stack);
     }
 
-    public static List<BuildingTile> createBuildingTiles1_4Players() { // TODO when BuildingTile fix merged
+    public static List<BuildingTile> createBuildingTiles1_4Players() {
         List<BuildingTile> buildingTiles = new ArrayList<>();
-        // TODO cakat kym sa opravi BuildingTile
         buildingTiles.add(new BuildingTile(new ArrayList<>(), new SimpleBuilding(new ArrayList<>(Arrays.asList(Effect.WOOD, Effect.CLAY)))));
         buildingTiles.add(new BuildingTile(new ArrayList<>(), new VariableBuilding(4, 2)));
         buildingTiles.add(new BuildingTile(new ArrayList<>(), new SimpleBuilding(new ArrayList<>(Arrays.asList(Effect.STONE, Effect.CLAY)))));
