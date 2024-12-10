@@ -61,6 +61,7 @@ public class TribeFedStatus implements InterfaceTribeFedStatus{
         }
 
         playerResourcesAndFood.takeResources(food);
+        tribeFed = true;
         return true;
     }
 

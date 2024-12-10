@@ -83,15 +83,14 @@ public class PlayerBoard implements InterfaceGetState {
 
     @Override
     public String state() {
-        Map<String, String> state = Map.of(
-                "points", String.valueOf(points),
-                "houses", String.valueOf(houses),
-                "civilisation cards", cards.state(),
-                "tools", tools.state(),
-                "resources and food", resourcesAndFood.state(),
-                "tribe fed status", fedStatus.state(),
-                "figures", figures.state()
-        );
-        return new JSONObject(state).toString();
+        JSONObject obj = new JSONObject();
+        obj.put("points", String.valueOf(points));
+        obj.put("houses", String.valueOf(houses));
+        obj.put("civilisation cards", new JSONObject(cards.state()));
+        obj.put("tools", new JSONObject(tools.state()));
+        obj.put("resources and food", new JSONObject(resourcesAndFood.state()));
+        obj.put("tribe fed status", new JSONObject(fedStatus.state()));
+        obj.put("figures", new JSONObject(figures.state()));
+        return obj.toString();
     }
 }

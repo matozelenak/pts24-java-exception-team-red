@@ -5,7 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.Map;
 
 public class PlayerBoardFactory {
-    public Map.Entry<PlayerBoard, PlayerBoardGameBoardFacade> createPlayerBoard() {
+    public static Map.Entry<PlayerBoard, PlayerBoardGameBoardFacade> createPlayerBoard() {
         PlayerFigures figures = new PlayerFigures();
         PlayerCivilisationCards cards = new PlayerCivilisationCards();
         PlayerTools tools = new PlayerTools();

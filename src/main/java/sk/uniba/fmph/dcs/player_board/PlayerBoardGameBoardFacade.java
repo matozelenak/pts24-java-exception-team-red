@@ -46,7 +46,6 @@ public class PlayerBoardGameBoardFacade implements InterfaceFeedTribe, Interface
 
     @Override
     public void giveEffect(Effect[] stuff) {
-        playerBoard.getPlayerResourcesAndFood().giveResources(List.of(stuff));
         for(Effect effect: stuff) {
             if(effect.isResourceOrFood()) {
                 playerBoard.getPlayerResourcesAndFood().giveResources(List.of(effect));
@@ -105,5 +104,9 @@ public class PlayerBoardGameBoardFacade implements InterfaceFeedTribe, Interface
     @Override
     public boolean addNewFigure() {
         return playerBoard.getPlayerFigures().addNewFigure();
+    }
+
+    public void addEndOfGamePoints() {
+        playerBoard.addEndOfGamePoints();
     }
 }
