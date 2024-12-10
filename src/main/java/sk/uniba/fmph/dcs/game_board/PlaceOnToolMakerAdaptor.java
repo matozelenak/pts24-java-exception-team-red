@@ -39,11 +39,12 @@ public class PlaceOnToolMakerAdaptor implements InterfaceFigureLocationInternal 
 
     @Override
     public HasAction tryToMakeAction(Player player) {
-        return toolMakerHutFields.canPlaceOnToolMaker(player) ? HasAction.WAITING_FOR_PLAYER_ACTION : HasAction.NO_ACTION_POSSIBLE;
+        return toolMakerHutFields.tryToMakeActionToolMaker(player) ? HasAction.WAITING_FOR_PLAYER_ACTION : HasAction.NO_ACTION_POSSIBLE;
     }
 
     @Override
     public boolean newTurn() {
-        return toolMakerHutFields.newTurn();
+        toolMakerHutFields.newTurn();
+        return false;
     }
 }

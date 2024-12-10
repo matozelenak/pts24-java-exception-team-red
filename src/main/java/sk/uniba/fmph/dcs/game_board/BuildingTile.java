@@ -95,7 +95,8 @@ public class BuildingTile implements InterfaceFigureLocationInternal {
         for(PlayerOrder figure: figures) {
             if(figure.getOrder() == player.getPlayerOrder().getOrder()) {
                 figures.remove(figure);
-                player.getPlayerBoard().addNewFigure();
+                break;
+//                player.getPlayerBoard().addNewFigure();
             }
         }
 
@@ -107,7 +108,7 @@ public class BuildingTile implements InterfaceFigureLocationInternal {
         for(PlayerOrder figure: figures) {
             if(figure.getOrder() == player.getPlayerOrder().getOrder()) {
                 figures.remove(figure);
-                player.getPlayerBoard().addNewFigure();
+//                player.getPlayerBoard().addNewFigure();
                 return true;
             }
         }

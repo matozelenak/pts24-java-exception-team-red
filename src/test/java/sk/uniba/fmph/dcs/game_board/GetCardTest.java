@@ -26,6 +26,10 @@ public class GetCardTest {
             public boolean finishUsingTools() {
                 return false;
             }
+            @Override
+            public int getThrowResult() {
+                return 0;
+            }
         };
     }
 

@@ -176,7 +176,7 @@ public class ResourceSourceTest {
         currentThrow.expectedThrowResult = 4;
 
         assertTrue(resourceSource.placeFigures(player1, 3));
-        assertEquals(resourceSource.makeAction(player1, null, outputResources), ActionResult.ACTION_DONE);
+        assertEquals(resourceSource.makeAction(player1, null, outputResources), ActionResult.ACTION_DONE_WAIT_FOR_TOOL_USE);
         assertEquals(playerBoardMock1.takeFiguresAmount, -3);
 
         assertEquals(resourceSource.makeAction(player2, null, outputResources), ActionResult.FAILURE);
@@ -194,14 +194,14 @@ public class ResourceSourceTest {
         currentThrow.expectedThrowResult = 2;
 
         assertTrue(resourceSource.placeFigures(player1, 3));
-        assertEquals(resourceSource.makeAction(player1, null, outputResources), ActionResult.ACTION_DONE);
+        assertEquals(resourceSource.makeAction(player1, null, outputResources), ActionResult.ACTION_DONE_WAIT_FOR_TOOL_USE);
         assertEquals(playerBoardMock1.takeFiguresAmount, -3);
 
         outputResources.clear();
         currentThrow.expectedThrowResult = 3;
 
         assertTrue(resourceSource.placeFigures(player2, 3));
-        assertEquals(resourceSource.makeAction(player2, null, outputResources), ActionResult.ACTION_DONE);
+        assertEquals(resourceSource.makeAction(player2, null, outputResources), ActionResult.ACTION_DONE_WAIT_FOR_TOOL_USE);
         assertEquals(playerBoardMock2.takeFiguresAmount, -3);
 
         assertEquals(resourceSource.makeAction(player3, null, outputResources), ActionResult.FAILURE);
@@ -218,7 +218,7 @@ public class ResourceSourceTest {
         currentThrow.expectedThrowResult = 4;
 
         assertTrue(resourceSource.placeFigures(player1, 3));
-        assertEquals(resourceSource.makeAction(player1, null, outputResources), ActionResult.ACTION_DONE);
+        assertEquals(resourceSource.makeAction(player1, null, outputResources), ActionResult.ACTION_DONE_WAIT_FOR_TOOL_USE);
         assertEquals(playerBoardMock1.takeFiguresAmount, -3);
 
         outputResources.clear();
@@ -323,5 +323,6 @@ public class ResourceSourceTest {
         public boolean addNewFigure() {
             return false;
         }
+
     }
 }

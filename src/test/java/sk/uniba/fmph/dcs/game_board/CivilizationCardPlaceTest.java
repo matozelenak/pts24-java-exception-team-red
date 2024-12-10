@@ -188,6 +188,7 @@ public class CivilizationCardPlaceTest {
         civilizationCardPlace3.placeFigures(player2, 1);
 
         assertEquals(civilizationCardPlace2.makeAction(player1, inputResources1, outputResources1), ActionResult.ACTION_DONE_WAIT_FOR_TOOL_USE);
+        throwMock.expected = new int[] {1, 2, 3, 4};
         assertEquals(civilizationCardPlace3.makeAction(player2, inputResources2, outputResources2), ActionResult.ACTION_DONE_ALL_PLAYERS_TAKE_A_REWARD);
 
         assertFalse(civilizationCardPlace1.newTurn());
@@ -223,6 +224,7 @@ public class CivilizationCardPlaceTest {
         civilizationCardPlace4.placeFigures(player2, 1);
 
 
+        throwMock.expected = new int[] {1, 2, 3, 4};
         assertEquals(civilizationCardPlace3.makeAction(player1, inputResources3, outputResources3), ActionResult.ACTION_DONE_ALL_PLAYERS_TAKE_A_REWARD);
         assertEquals(civilizationCardPlace4.makeAction(player2, inputResources4, outputResources4), ActionResult.ACTION_DONE);
         assertEquals(civilizationCardPlace1.makeAction(player1, inputResources1, outputResources1), ActionResult.ACTION_DONE);

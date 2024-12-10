@@ -1,5 +1,7 @@
 package sk.uniba.fmph.dcs.game_phase_controller;
 
+import sk.uniba.fmph.dcs.game_board.CivilizationCardPlace;
+import sk.uniba.fmph.dcs.game_board.FigureLocationAdaptor;
 import sk.uniba.fmph.dcs.stone_age.*;
 
 import java.util.Collection;
@@ -18,12 +20,25 @@ public class NewRoundState implements InterfaceGamePhaseState{
     @Override
     public HasAction tryToMakeAutomaticAction(PlayerOrder player) {
 
-        HasAction gameEnded = HasAction.NO_ACTION_POSSIBLE;
+        HasAction gameEnded = HasAction.AUTOMATIC_ACTION_DONE;
+
+        if (civilizationCardPlaceNewTurn(1))
+            gameEnded = HasAction.NO_ACTION_POSSIBLE;
+        if (civilizationCardPlaceNewTurn(2))
+            gameEnded = HasAction.NO_ACTION_POSSIBLE;
+        if (civilizationCardPlaceNewTurn(3))
+            gameEnded = HasAction.NO_ACTION_POSSIBLE;
+        if (civilizationCardPlaceNewTurn(4))
+            gameEnded = HasAction.NO_ACTION_POSSIBLE;
+
         for(InterfaceFigureLocation place : places){
+            if (place instanceof FigureLocationAdaptor) {
+                FigureLocationAdaptor adaptor = (FigureLocationAdaptor) place;
+                if (adaptor.getInternal() instanceof CivilizationCardPlace) continue; // skip civilisation card places
+            }
+            if(place.newTurn()){
 
-            if(!place.newTurn()){
-
-                gameEnded = HasAction.AUTOMATIC_ACTION_DONE;
+                gameEnded = HasAction.NO_ACTION_POSSIBLE;
             }
         }
 
@@ -85,5 +100,20 @@ public class NewRoundState implements InterfaceGamePhaseState{
     public ActionResult placeFigures(PlayerOrder player, Location location, int figuresCount) {
 
         return ActionResult.FAILURE;
+    }
+
+    private boolean civilizationCardPlaceNewTurn(int which) {
+        for (InterfaceFigureLocation place : places) {
+            if (! (place instanceof FigureLocationAdaptor)) continue;
+
+            FigureLocationAdaptor adaptor = (FigureLocationAdaptor) place;
+            if (! (adaptor.getInternal() instanceof CivilizationCardPlace)) continue;
+
+            CivilizationCardPlace civilizationCardPlace = (CivilizationCardPlace) adaptor.getInternal();
+            if (civilizationCardPlace.getRequiredResources() == which) {
+                return civilizationCardPlace.newTurn();
+            }
+        }
+        return false;
     }
 }

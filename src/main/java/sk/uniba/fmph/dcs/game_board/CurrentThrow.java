@@ -13,16 +13,16 @@ public class CurrentThrow implements InterfaceCurrentThrow, InterfaceToolUse {
     private InterfaceThrow throwDices;
     private Player player;
     private int throwSum, divBy;
-    private List<Integer> toolsUsed;
+    private boolean used;
 
     public CurrentThrow(InterfaceThrow throwDices) {
         this.throwDices = throwDices;
-        toolsUsed = new ArrayList<>();
+        used = false;
     }
 
     @Override
     public void initiate(Player player, Effect effect, int dices) {
-        toolsUsed.clear();
+        used = false;
         this.throwsFor = effect;
         this.player = player;
 
@@ -68,20 +68,22 @@ public class CurrentThrow implements InterfaceCurrentThrow, InterfaceToolUse {
     @Override
     public String state() {
         Map<String, String> map = new HashMap<>();
-        map.put("throwsFor", throwsFor.toString());
+        map.put("throwsFor", throwsFor != null ? throwsFor.toString() : "null");
         map.put("throwResult", throwResult+"");
+        map.put("used", used ? "true" : "false");
         return new JSONObject(map).toString();
     }
 
     @Override
     public boolean useTool(int idx) {
         if (!canUseTools()) return false;
-        if (!player.getPlayerBoard().hasSufficientTools(idx)) return false;
 
-        player.getPlayerBoard().useTool(idx);
-        toolsUsed.add(idx);
+        OptionalInt oint = player.getPlayerBoard().useTool(idx);
+        if (oint.isEmpty()) {
+            return false;
+        }
 
-        this.throwSum += idx;
+        this.throwSum += oint.getAsInt();
         this.throwResult = this.throwSum / this.divBy;
 
         return true;
@@ -94,11 +96,17 @@ public class CurrentThrow implements InterfaceCurrentThrow, InterfaceToolUse {
 
     @Override
     public boolean finishUsingTools() {
+        if (used) return false;
         Effect[] result = new Effect[throwResult];
         for (int i = 0; i < throwResult; i++) {
             result[i] = throwsFor;
         }
         player.getPlayerBoard().giveEffect(result);
+        used = true;
         return true;
+    }
+
+    public InterfaceThrow getThrowDices() {
+        return throwDices;
     }
 }
