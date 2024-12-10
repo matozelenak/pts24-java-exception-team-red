@@ -58,4 +58,8 @@ public class FigureLocationAdaptor implements InterfaceFigureLocation {
         }
         return null;
     }
+
+    public InterfaceFigureLocationInternal getInternal() {
+        return internal;
+    }
 }
